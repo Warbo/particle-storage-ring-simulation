@@ -8,7 +8,9 @@ class Matrix(object):
 
 		self.column_number = columns
 
-		self.matrix = [None for r in range(self.row_number)]
+		self.matrix = []
+		for r in range(self.row_number):
+			self.matrix.append(None)
 
 		for row in range(self.row_number):
 			new_column = []
