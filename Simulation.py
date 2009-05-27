@@ -37,7 +37,7 @@ def count_lost(particles):
 	return count
 
 n_steps = 20
-particles = 500
+particles = 10
 ring_steps = 40.
 total_steps = ring_steps * 50
 r0 = 2.
@@ -46,12 +46,12 @@ ymax = 0.03
 xpmax = xmax/r0
 ypmax = ymax/r0
 
-def is_escaped(particle):
-	if abs(particle.matrix['0,0']) > xmax:
-		particle.lost[0] = True
-	if abs(particle.matrix['2,0']) > ymax:
-		particle.lost[1] = True
-	return any(particle.lost)
+#def is_escaped(particle):
+#	if abs(particle.matrix['0,0']) > xmax:
+#		particle.lost[0] = True
+#	if abs(particle.matrix['2,0']) > ymax:
+#		particle.lost[1] = True
+#	return any(particle.lost)
 
 dz = (2 * r0 * math.pi) / ring_steps
 
@@ -67,17 +67,36 @@ for n in ns:
 		[0.0,0.0,-1. * ((n**0.5)/r0)*math.sin((n**0.5)*(dz/r0)), math.cos((n**0.5)*(dz/r0))]
 		])
 
+	empty_matrix = Matrix.m.make_matrix([\
+		[math.cos(dz/r0), r0*math.sin(dz/r0),0.0,0.0],\
+		[(-1.0/r0)*math.sin(dz/r0), math.cos(dz/r0),0.0,0.0],\
+		[0.0,0.0,1.0,dz],\
+		[0.0,0.0,0.0,1.0]\
+		])
+
 	sections = []
-	for x in range(ring_steps):
+
+	# NO GAPS
+	for x in range(int(ring_steps)):
 		sections.append(RingSection.RingSection(ring_matrix))
 
-	rings.append(Ring.Ring(sections, make_particles(particles, xmax, ymax, xpmax, ypmax)))
+	# 2 GAPS OF 5%
+	#for x in range((int(ring_steps)/2) - 2):
+	#	sections.append(RingSection.RingSection(ring_matrix))
+	#for x in range(2):
+	#	sections.append(RingSection.RingSection(empty_matrix))
+	#for x in range((int(ring_steps)/2) - 2):
+	#	sections.append(RingSection.RingSection(ring_matrix))
+	#for x in range(2):
+	#	sections.append(RingSection.RingSection(empty_matrix))
+
+	rings.append(Ring.Ring(sections, make_particles(particles, xmax, ymax, xpmax, ypmax), xmax, ymax))
 
 for x, ring in enumerate(rings):
-	ring.step(total_steps, is_escaped)
+	ring.step(total_steps)
 	print str(len(rings) - x)
 
-out = ["n, remaining, xremaining, yremaining"]
+out = ["n, remaining, xlost, ylost"]
 
 for x, ring in enumerate(rings):
 	out.append(str(ns[x]) + ', ' + str(particles - count_lost(ring.particles)) + ', ' + str(particles - count_x_lost(ring.particles)) + ', ' + str(particles - count_y_lost(ring.particles)))

@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 
-class Matrix(object):
+class Matrix:
 	"""This custom class is a pure Python implementation of matrices."""
 
-	def __init__(self, rows, columns):
+	def __init__(self):
+		pass
+
+	def init(self, rows, columns):
 		self.row_number = rows
 
 		self.column_number = columns
 
-		self.matrix = [None for r in range(self.row_number)]
+		self.matrix = []
+		for r in range(self.row_number):
+			self.matrix.append(None)
 
 		for row in range(self.row_number):
 			new_column = []
 			for column in range(self.column_number):
-				new_column.append(0)
+				new_column.append(0.0)
 			self.matrix[row] = new_column
 
 	def __setitem__(self, position, value):
@@ -33,10 +38,11 @@ class Matrix(object):
 		nested list given."""
 		rows = len(values)
 		columns = len(values[0])
-		matrix = Matrix(rows, columns)
+		matrix = Matrix()
+		matrix.init(rows, columns)
 		for r, row in enumerate(values):
 			for c, element in enumerate(row):
-				matrix[str(r)+','+str(c)] = element
+				matrix.__setitem__(str(r)+','+str(c), element)
 		return matrix
 
 	#make_matrix = staticmethod(make_matrix)
@@ -59,7 +65,8 @@ class Matrix(object):
 			raise ValueError("Matrix dimensions do not match.")
 
 		# Now make the resulting matrix
-		matrix = Matrix(self.row_number, other.column_number)
+		matrix = Matrix()
+		matrix.init(self.row_number, other.column_number)
 
 		# Now calculate each element of the new matrix
 		for r, row in enumerate(matrix.matrix):
@@ -68,8 +75,7 @@ class Matrix(object):
 				# The current element is the sum of the elements of
 				# this matrix's row and the other matrix's column
 				for i in range(self.row_number):
-					matrix[str(r)+','+str(c)] += \
-						self.matrix[r][i] * other.get_column(c)[i]
+					matrix.__setitem__(str(r)+','+str(c), matrix.__getitem__(str(r)+','+str(c)) + self.matrix[r][i] * other.get_column(c)[i])
 
 		return matrix
 
@@ -80,20 +86,12 @@ class Matrix(object):
 		return_string = return_string + ']'
 		return return_string
 
-m = Matrix(1,1)
+m = Matrix()
+m.init(1,1)
 
 if __name__ == '__main__':
-	test1 = m.make_matrix([ \
-		[1.0, 0.0, 0.0, 0.0], \
-		[0.0, 1.0, 0.0, 0.0], \
-		[0.0, 0.0, 1.0, 0.0], \
-		[0.0, 0.0, 0.0, 1.0] \
-		])
-	test2 = m.make_matrix([ \
-		[1.0], \
-		[2.0], \
-		[3.0], \
-		[4.0] \
-		])
+	test1 = m.make_matrix([[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
+	test2 = m.make_matrix([[1.0], [2.0], [3.0], [4.0]])
 
-	print str(test1*test2)
+	print (test1.__mul__(test2)).__str__()
+	print (test1 * test2).__str__()
