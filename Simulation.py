@@ -7,6 +7,7 @@ import random
 
 def make_particles(number, xmax, ymax, xpmax, ypmax):
 	particles = []
+
 	for index in range(number):
 		particles.append(Particle.p.make_particle(\
 			(random.random()*2*xmax)-xmax, \
@@ -36,30 +37,29 @@ def count_lost(particles):
 			count += 1
 	return count
 
+# Set some properties
 n_steps = 20
-particles = 10
+particles = 1000
 ring_steps = 40.
-total_steps = ring_steps * 50
+rotations = 50
+total_steps = ring_steps * rotations
 r0 = 2.
 xmax = 0.03
 ymax = 0.03
 xpmax = xmax/r0
 ypmax = ymax/r0
 
-#def is_escaped(particle):
-#	if abs(particle.matrix['0,0']) > xmax:
-#		particle.lost[0] = True
-#	if abs(particle.matrix['2,0']) > ymax:
-#		particle.lost[1] = True
-#	return any(particle.lost)
-
 dz = (2 * r0 * math.pi) / ring_steps
 
+# These are the field indices to use
 ns = [float(x)/n_steps for x in range(1, n_steps)]
 
+# This stores the rings to be simulated
 rings = []
 
+# Make one ring per field index
 for n in ns:
+	# Create the matrices for this field index
 	ring_matrix = Matrix.m.make_matrix([\
 		[math.cos(((1-n)**0.5)*(dz/r0)), (r0/((1-n)**0.5))*math.sin(((1-n)**0.5)*(dz/r0)),0.0,0.0],\
 		[-1. * (((1-n)**0.5)/r0)*math.sin(((1-n)**0.5)*(dz/r0)), math.cos(((1-n)**0.5)*(dz/r0)),0.0,0.0],\
@@ -74,33 +74,28 @@ for n in ns:
 		[0.0,0.0,0.0,1.0]\
 		])
 
+	# Make the sections for this ring
 	sections = []
-
-	# NO GAPS
-	for x in range(int(ring_steps)):
+	for x in range(4):
+		sections.append(RingSection.RingSection(empty_matrix))
+	for x in range(int(ring_steps)-4):
 		sections.append(RingSection.RingSection(ring_matrix))
 
-	# 2 GAPS OF 5%
-	#for x in range((int(ring_steps)/2) - 2):
-	#	sections.append(RingSection.RingSection(ring_matrix))
-	#for x in range(2):
-	#	sections.append(RingSection.RingSection(empty_matrix))
-	#for x in range((int(ring_steps)/2) - 2):
-	#	sections.append(RingSection.RingSection(ring_matrix))
-	#for x in range(2):
-	#	sections.append(RingSection.RingSection(empty_matrix))
-
+	# Make the ring
 	rings.append(Ring.Ring(sections, make_particles(particles, xmax, ymax, xpmax, ypmax), xmax, ymax))
 
+# Run the simulation
 for x, ring in enumerate(rings):
 	ring.step(total_steps)
 	print str(len(rings) - x)
 
-out = ["n, remaining, xlost, ylost"]
+# Receive the results
+out = ["n, total, x, y"]
 
 for x, ring in enumerate(rings):
-	out.append(str(ns[x]) + ', ' + str(particles - count_lost(ring.particles)) + ', ' + str(particles - count_x_lost(ring.particles)) + ', ' + str(particles - count_y_lost(ring.particles)))
+	out.append(str(ns[x]) + ', ' + str(len(ring.particles) - count_lost(ring.particles)) + ',' + str(len(ring.particles) - count_x_lost(ring.particles)) + ',' + str(len(ring.particles) - count_y_lost(ring.particles)))
 
+# Write the results to a file
 outfile = open("OUT.csv", "w")
 for line in out:
 	outfile.write(line + '\n')

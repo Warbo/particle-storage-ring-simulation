@@ -1,0 +1,13291 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\usepackage{color}
+\usepackage{alltt}
+\usepackage[latin1]{inputenc}
+
+
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.16,0.16,1}{#1}}
+\newcommand{\hlesc}[1]{\textcolor[rgb]{1,0,1}{#1}}
+\newcommand{\hlstr}[1]{\textcolor[rgb]{1,0,0}{#1}}
+\newcommand{\hldstr}[1]{\textcolor[rgb]{0.51,0.51,0}{#1}}
+\newcommand{\hlslc}[1]{\textcolor[rgb]{0.51,0.51,0.51}{\it{#1}}}
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.51,0.51,0.51}{\it{#1}}}
+\newcommand{\hldir}[1]{\textcolor[rgb]{0,0.51,0}{#1}}
+\newcommand{\hlsym}[1]{\textcolor[rgb]{0,0,0}{#1}}
+\newcommand{\hlline}[1]{\textcolor[rgb]{0.33,0.33,0.33}{#1}}
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0,0,0}{\bf{#1}}}
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.51,0,0}{#1}}
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,0}{\bf{#1}}}
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0.51}{#1}}
+\end_preamble
+\use_default_options false
+\language english
+\inputencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Simulating a Particle Storage Ring
+\end_layout
+
+\begin_layout Author
+Christopher Warburton
+\end_layout
+
+\begin_layout Author
+060196497
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\emph on
+PHY342
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Simulation
+\end_layout
+
+\begin_layout Subsection
+Description
+\end_layout
+
+\begin_layout Standard
+The physical system being simulated is that of a magnetic storage ring for
+ particles, such as the Stanford Positron Electron Accelerating Ring (SPEAR).
+ In a storage ring there is a toroidal cavity containing a strong vacuum,
+ surrounded by a series of magnets (dipole, quadrupole, etc.), or more atypically
+ electric poles.
+ These create an electromagnetic field inside the ring, which is used to
+ influence the path of charged particles in order to keep them orbiting
+ in a narrow ring.
+ The particles are non-interacting and their spin is neglected, as modelling
+ these properties has been shown to be of little utility over non-interacting
+ particles, whilst introducing more complexity and overhead according to
+ Banford [1].
+ The full derivation of the mechanics is given in Appendix A, producing
+ matrices to transform each particle's position and divergence between one
+ infinitesimal section of the ring to the next.
+\end_layout
+
+\begin_layout Standard
+Since machines which are capable of infinite computation in a finite time
+ are still theoretical [2], the true results of integrating around the ring
+ cannot be obtained numerically, thus the infinitesimal size 
+\begin_inset Formula $dz$
+\end_inset
+
+ is replaced with a small, but finite, size, giving approximate results.
+\end_layout
+
+\begin_layout Standard
+The rings being simulated are given fixed properties at creation, such as
+ field index, circumference/radius and beam width and height, as well as
+ properties for their simulation such as the number of sections to divide
+ the ring into (and hence the size of 
+\begin_inset Formula $dz$
+\end_inset
+
+), the number of particles to contain and the number of revolutions to perform.
+ The particles are created using a Monte Carlo technique, giving a uniform
+ distribution across the width (
+\begin_inset Formula $\pm x_{max}$
+\end_inset
+
+) and height (
+\begin_inset Formula $\pm y_{max}$
+\end_inset
+
+) of the beam, as well as uniformly distributed divergences between the
+ maximum/minimum divergences radially and vertically (
+\begin_inset Formula $\pm x_{max}^{\prime}$
+\end_inset
+
+ and 
+\begin_inset Formula $\pm y_{max}^{\prime}$
+\end_inset
+
+), defined as 
+\begin_inset Formula $\frac{x_{max}}{r_{0}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{y_{max}}{r_{0}}$
+\end_inset
+
+ respectively (where 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+ is the radius from the centre of the ring to the centre of the beam).
+ These are then inserted into the ring at an arbitrary section and the simulatio
+n is begun.
+\end_layout
+
+\begin_layout Standard
+Whilst these values only appear once in the code, and are thus easily reconfigur
+able, in order to reduce the number of variables being considered the storage
+ rings simulated have a beam width and height of 0.06m (
+\begin_inset Formula $x_{max}=y_{max}=0.03$
+\end_inset
+
+) and a circumference of 2m (
+\begin_inset Formula $\therefore r_{0}=\frac{2}{2\pi}=0.318$
+\end_inset
+
+).
+ The number of particles, number of revolutions, number of sections and
+ field index were varied.
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
+\begin_layout Subsubsection
+Field Index
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/Acceptance.svg
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Acceptance against field index (10,000 particles)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first property investigated was the variation in acceptance (equal to
+ the fraction of remaining particles) as the field index 
+\begin_inset Formula $n$
+\end_inset
+
+ was varied from 
+\begin_inset Formula $0<n<1$
+\end_inset
+
+ for 20 rings of 40 sections each, containing 10,000 particles making 50
+ revolutions.
+ Figure 1 shows the results of these simulations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/XY.svg
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Vertical and radial acceptance components (10,000 particles)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The shape obtained is a combination of the 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ acceptance, shown in figure 2 (slight deviations between the green line
+ of 
+\begin_inset Formula $1-\left(x\, acceptance+y\, acceptance\right)$
+\end_inset
+
+ and the total acceptance from figure 1 are due to particles which escape
+ in both the 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ directions within a single step).
+\end_layout
+
+\begin_layout Standard
+The symmetric shape of the total acceptance and the complementary shapes
+ of the 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ acceptances can be explained by considering the transformation matrix which
+ produced them (see Appendix A for its derivation)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{cccc}
+\cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{1-n}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & 0 & 0\\
+-\frac{\sqrt{1-n}}{r_{0}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & 0 & 0\\
+0 & 0 & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{n}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right)\\
+0 & 0 & -\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right)\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here the dependency on the field index is clear.
+ Taking 
+\begin_inset Formula $\alpha\equiv1-n$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta\equiv n$
+\end_inset
+
+ this becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{cccc}
+\cos\left(\sqrt{\alpha}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{\alpha}}\sin\left(\sqrt{\alpha}\frac{dz}{r_{0}}\right) & 0 & 0\\
+-\frac{\sqrt{\alpha}}{r_{0}}\sin\left(\sqrt{\alpha}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{\alpha}\frac{dz}{r_{0}}\right) & 0 & 0\\
+0 & 0 & \cos\left(\sqrt{\beta}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{\beta}}\sin\left(\sqrt{\beta}\frac{dz}{r_{0}}\right)\\
+0 & 0 & -\frac{\sqrt{\beta}}{r_{0}}\sin\left(\sqrt{\beta}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{\beta}\frac{dz}{r_{0}}\right)\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With this notation the similarity of the radial transformation (top left)
+ and the vertical transformation (bottom right) is clear as 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+ appear in exactly the same form.
+ In the interval taken, 
+\begin_inset Formula $0<n<1$
+\end_inset
+
+, the values of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+ are reflections of each other about 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Particle Number
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/Converging_Acceptance_vs_N.svg
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/ParticleNConverge/Converging.svg
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Acceptance converging for larger particle numbers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The top graph of figure 3 superimposes similar results to figure 1, but
+ for simulations of 10, 100, 1000 and 10000 particles, showing a convergence
+ as the effect of each particle on the result is reduced.
+ This convergence is shown more quantitively in the lower graph, which only
+ takes the acceptance when 
+\begin_inset Formula $n=0.5$
+\end_inset
+
+, and extends the final acceptance value of 0.307 (for 11,000 particles)
+ across the graph for comparison.
+ This result is to be expected, since the particles are non-interacting
+ and thus the only difference between the simulations is the average approaching
+ the expected result (known as the 
+\begin_inset Quotes eld
+\end_inset
+
+Law of large numbers
+\begin_inset Quotes erd
+\end_inset
+
+ [3]).
+\end_layout
+
+\begin_layout Subsubsection
+Rotations and Steps Taken
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/RotationChanging/Rotation.svg
+	width 85text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Acceptance variation with rotations made
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next to be considered is the number of rotations the particles make around
+ the ring, and whether travelling further reduces the number of particles
+ remaining.
+ The effect can be seen in figure 4, where no dependency is observed.
+ This is due to the simple harmonic motion which the particles follow (see
+ Appendix A), causing those in unmaintainable orbits to escape in their
+ first oscillation as they reach maximum displacement.
+ Those remaining are oscillating within the confines of the beam, and thus
+ can continue to do so for a prolonged period.
+ A closer inspection of particle losses as they orbit their rings is given
+ in figure 5, where the individual sections are considered rather than full
+ rotations (which occur at every vertical line).
+ The majority of particles which escape do so within the first rotation,
+ whilst figure 6 shows the path of a particle traced from the start of the
+ simulation until it escaped the ring, confirming that the simple harmonic
+ behaviour is the cause.
+ In the plot 
+\begin_inset Quotes eld
+\end_inset
+
+particle 1
+\begin_inset Quotes erd
+\end_inset
+
+ oscillates well within the beam width and height, whilst 
+\begin_inset Quotes eld
+\end_inset
+
+particle 2
+\begin_inset Quotes erd
+\end_inset
+
+ exits the beam and escapes after traversing 14 sections.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/RotationChanging/Steps.svg
+	width 85text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Remaining particles per section (40 sections per rotation)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Python2/tracks.svg
+	width 85text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+x and y paths for two sample particles (horizontal lines are 
+\begin_inset Formula $\pm x_{max}$
+\end_inset
+
+ and 
+\begin_inset Formula $\pm y_{max}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Implementation
+\end_layout
+
+\begin_layout Subsection
+Platform choice
+\end_layout
+
+\begin_layout Standard
+To implement the simulation requires an assessment of development options.
+ Whilst all notable programming languages are Turing complete, and thus
+ equivalent, this does not imply that a direct translation between all languages
+ is possible.
+ Where it is not, equivalence can only be achieved by emulation, writing
+ a Turing machine within the target language which accepts as input the
+ source language.
+ This technique of emulation allows ever more sophisticated Turing machines
+ to be constructed, capable of accepting more complex and structured input.
+\end_layout
+
+\begin_layout Standard
+In hardware this allows different silicon circuits to emulate standard hardware
+ architectures, such as 
+\emph on
+ARM
+\emph default
+ and 
+\emph on
+POWER
+\emph default
+, whilst in software it allows implementation of higher-level languages
+ such as C and FORTRAN by generating an equivalent, yet much less comprehensible
+, machine code emulation of the more abstract code.
+ More abstract languages, such as Java, Ruby and Python, can be built by
+ emulating an appropriate machine in lower level language like C (eg.
+ 
+\emph on
+CPython
+\emph default
+) or machine code (eg.
+ a compiler generated by 
+\emph on
+PyPy
+\emph default
+).
+\end_layout
+
+\begin_layout Standard
+These 
+\begin_inset Quotes eld
+\end_inset
+
+high level
+\begin_inset Quotes erd
+\end_inset
+
+ languages, as opposed to the 
+\begin_inset Quotes eld
+\end_inset
+
+low level
+\begin_inset Quotes erd
+\end_inset
+
+ languages which are more similar to those of computer circuitry, are more
+ flexible by definition (low level languages are a subset of high level
+ languages), and are thus more appropriate for representing a wide range
+ of algorithms since any data structures, control flow, behaviour and syntax
+ can be created specifically to suit the problem being addressed.
+ For example, languages which allow operator overloading can use regular
+ multiplication syntax (for example a=b*c) to represent other operations
+ such as matrix multiplication, and language support for linked lists and
+ tail recursion can often reduce boilerplate significantly.
+ The disadvantage of high level languages is the performance cost paid by
+ the emulation.
+ Each level of abstraction implements a Turing machine, translating one
+ instruction set into a simpler one in a general way, thus growing the number
+ of operations at each stage and losing efficiency due to the generality
+ of the translation.
+ For example a terse Python program will generate a large amount of CPython
+ bytecode, which in turn will call an even larger number of C instructions,
+ which sends an even larger number of machine instructions.
+ Similarly a program written in POWER machine code will not perform as well
+ in a POWER emulator (for example PearPC) as opposed to a real POWER machine
+ (for example Microsoft's XBox 360).
+\end_layout
+
+\begin_layout Standard
+Considering the advantages and disadvantages of high level languages, it
+ was decided that the clarity, modularity and compact nature inherent to
+ high level code, making its correctness simpler to verify, outweighed the
+ performance losses associated.
+ The possible candidates decided upon were C, C++, Java, FORTRAN, Python,
+ Haskell and Erlang.
+ The merits of each are discussed below.
+\end_layout
+
+\begin_layout Subsubsection
+C
+\end_layout
+
+\begin_layout Standard
+C is a statically typed, structured programming language which is highly
+ portable (for example, the GNU Compiler Collection alone supports over
+ 50 machine architectures) and has been the subject of optimisation experiments
+ for decades.
+ Although it has this pedigree, as well as an extensive collection of libraries,
+ examples and a large community following, C has numerous disadvantages
+ which made it undesirable for this project.
+\end_layout
+
+\begin_layout Standard
+Firstly the sophistication of data structures afforded to a C program is
+ severely limited.
+ C contains a few arbitrary numerical types, such as 
+\begin_inset Quotes eld
+\end_inset
+
+int
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+float
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+char
+\begin_inset Quotes erd
+\end_inset
+
+, along the lines of the 
+\emph on
+IEEE 754
+\emph default
+ standard, which are built in to the language implementation and unchangable.
+ Adding types is achieved by enumerating values for that type, automatically
+ assigning each possible value an integer number (which can cause headaches
+ later as they are indistinguishable from non-enumerating integers).
+ This inflexibility extends to C's type system, which assigns a type to
+ each variable given in the code, forcing the declaration of that type by
+ the developer.
+ New data structures must be constructed through the use of 
+\begin_inset Quotes eld
+\end_inset
+
+structs
+\begin_inset Quotes erd
+\end_inset
+
+, unordered mappings of key/value pairs, and through fixed-length, typed
+ arrays.
+ More complex typing systems can be used (eg.
+ GObject), but these are essentially emulations of C++.
+\end_layout
+
+\begin_layout Standard
+The typing of each variable comes from the minimalist memory model of C,
+ where memory is treated as an array of addressable bytes.
+ Each variable has a pointer specifying the memory location at which its
+ storage begins, and a type which allows determination of the size (and
+ thus end) of the storage.
+ Memory banging in this way is prevalent throughout C, often being the only
+ way to achieve what other languages have built in.
+ For example only a single variable of a built-in type can be returned from
+ a C function, thus for anything more complex pointers are used to find
+ the location and the memory is altered globally.
+ With these severe restrictions, and the hacks and boilerplate required
+ to work around them, C is not the best candidate for this simulation.
+\end_layout
+
+\begin_layout Subsubsection
+C++
+\end_layout
+
+\begin_layout Standard
+C++ is very similar to C, although it has an improved type system built
+ in.
+ This type system is a primitive form of Object Oriented programming, with
+ objects being wrappers around collections of the built in types, other
+ objects and functions, just like a struct.
+ The difference comes through the class system of C++, which groups the
+ behaviour of objects in to classes approaching the level of built in types,
+ but still just remaining a wrapper.
+\end_layout
+
+\begin_layout Standard
+Whilst better than C for this project, C++ still suffers from most of C's
+ restrictions and requires even more boilerplate to implement an algorithm.
+ For this reason C++ was discarded.
+\end_layout
+
+\begin_layout Subsubsection
+Java
+\end_layout
+
+\begin_layout Standard
+Java is syntactically similar to C++, but abstracts away some of the hacks
+ remaining from C.
+ For example, in Java the distinction between a pointer and a value is based
+ on context, rather than them being explicitly differentiated from each
+ other.
+ As such Java's memory model is only accessible to Java programs through
+ Java code, there is no rewriting of memory addresses by the program.
+\end_layout
+
+\begin_layout Standard
+Whilst Java takes the class-based object system of C++ slightly further,
+ treating objects in almost the same way as its built in, non-object types,
+ it is still simply a wrapper around the built in types, which are not changable.
+\end_layout
+
+\begin_layout Standard
+Java is clearer than C and C++ code due to the lack of pointers and the
+ extended use of objects, and its inclusion of a garbage collector reduces
+ some code overhead, however despite this the boilerplate for Java can be
+ even higher than that of C++, and the enforcement of Java's style makes
+ algorithm implementation difficult unless the algorithm happens to exactly
+ fit Java's restrictive definition of correct.
+\end_layout
+
+\begin_layout Standard
+This makes Java unsuitable for this project.
+\end_layout
+
+\begin_layout Subsubsection
+FORTRAN
+\end_layout
+
+\begin_layout Standard
+FORTRAN is a heavily numerical language, stateful and fast, which is a well
+ suited paradigm to a Physics simulation project, however code organisation
+ and data structures are rather limited.
+ This makes it useful, but not ultimately the implementation language.
+\end_layout
+
+\begin_layout Subsubsection
+Python
+\end_layout
+
+\begin_layout Standard
+Python is a dynamic, late-bound language which does not suffer from many
+ of the static restrictions of C, C++ and Java since it is entirely object
+ oriented.
+ In Python there are no base types, since everything is an object.
+ Whilst the class-based object model used in C++ and Java is also used in
+ Python, the requirement to give variables explicit types is eliminated
+ by making every variable a pointer.
+ Since pointers are always integers this removes any distinction between
+ them, even though they can point at any Object in memory.
+ Python is therefore 
+\begin_inset Quotes eld
+\end_inset
+
+duck typed
+\begin_inset Quotes erd
+\end_inset
+
+, following the adage 
+\begin_inset Quotes eld
+\end_inset
+
+If it walks like a duck and quacks like a duck, I would call it a duck
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is in reference to accessing a member of an object , which Python
+ will always attempt regardless of whether the object contains such a member
+ or not, raising an Exception (which can be caught) in the latter case.
+ Duck typing in combination with the 
+\begin_inset Quotes eld
+\end_inset
+
+Easier to ask forgiveness than permission
+\begin_inset Quotes erd
+\end_inset
+
+ method of exception handling reduces a lot of boilerplate code, leaving
+ in place highly readable code.
+ The extra polymorphism introduced also reduces code duplication and the
+ requirement for a pervasive naming scheme (such as Hungarian notation).
+ The pervasiveness of Python's object model extends to classes and functions,
+ which are first class language constructs.
+ Late binding allows classes to be modified on the fly and high level functions
+ (those which act on other functions) to be constructed in a general way.
+\end_layout
+
+\begin_layout Standard
+Another advantage to Python is the resemblance of its syntax to that of
+ pseudocode, making the implementation of a pseudocode algorithm often a
+ matter of merely tweaking the syntax, such as adding a colon after 
+\begin_inset Quotes eld
+\end_inset
+
+if
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+for
+\begin_inset Quotes erd
+\end_inset
+
+ lines.
+ The syntax also has built in support for lists (mutable object sequences
+ of mutable length) by simply writing 
+\begin_inset Quotes eld
+\end_inset
+
+[element_1, element_2, ...
+ element_n] and dictionaries (mutable associative arrays, mapping key objects
+ to value objects) by writing 
+\begin_inset Quotes eld
+\end_inset
+
+{key_1:value_1, key_2:value_2, ...
+ key_n:value_n}.
+ These make Python code very readable, especially when used in loops of
+ the form 
+\begin_inset Quotes eld
+\end_inset
+
+for element in list:
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+for element in dictionary.keys():
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Python's implicit, stateful paradigm is well suited to the simulation being
+ approached.
+ Its polymorphism, achieved through duck typing, allows modularity without
+ loss of terseness.
+\end_layout
+
+\begin_layout Subsubsection
+Haskell
+\end_layout
+
+\begin_layout Standard
+Haskell is a lazy, stateless, functional programming language.
+ Being functional and stateless, Haskell is well suited to evaluating Mathematic
+s, since Mathematics is inherently concurrent, and thus the concept of reassigni
+ng variables (outside of specified 
+\begin_inset Quotes eld
+\end_inset
+
+let
+\begin_inset Quotes erd
+\end_inset
+
+ statements) makes no sense.
+\end_layout
+
+\begin_layout Standard
+Haskell is lazy in that its functions are evaluated when required to produce
+ output, but other than that they are simply 'remembered' as 
+\begin_inset Quotes eld
+\end_inset
+
+thunks
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This allows convenient constructions such as infinitely long lists and
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Currying
+\begin_inset Quotes erd
+\end_inset
+
+, supplying functions with fewer arguments than they require in order to
+ produce new functions which no longer require those arguments to be supplied.
+ This fits elegantly into Haskell's type system, which allows extremely
+ general, verifiably correct functions to be constructed.
+\end_layout
+
+\begin_layout Standard
+However, since variables are immutable in Haskell this comes with the cost
+ of a much higher memory footprint (since new variables must be constructed
+ to store new values, rather than replacing old ones).
+ For a simulation, which only depends on the current state and the functions
+ which transform it into the next state, the overhead of remembering every
+ state of every element of the system at every point in time is too much
+ of a cost.
+ This could be overcome through the use of thunks, but would make removing
+ escaped particles difficult.
+\end_layout
+
+\begin_layout Subsubsection
+Erlang
+\end_layout
+
+\begin_layout Standard
+Erlang is a distributed, functional, actor based programming language designed
+ to spread computation transparently over thousands of machines or more.
+ Whilst this is in itself a killer feature for the language, it is incredibly
+ difficult to verify the correctness of the concurrent code.
+ Though sophisticated testing infrastructure exists, often the majority
+ of an Erlang application is tests.
+ For a scientific project this level of uncertainty is not acceptable.
+\end_layout
+
+\begin_layout Subsubsection
+Decision
+\end_layout
+
+\begin_layout Standard
+Python was chosen as the most appropriate language to use, since it allows
+ the expression of the relevant algorithms in a concise and understandable
+ manner.
+ Whilst typical Python implementations do not perform as well as lower level
+ languages such as C or machine code, this is a temporary issue which can
+ be resolved through more sophisticated implementations.
+ Donald Knuth famously said 
+\begin_inset Quotes eld
+\end_inset
+
+Premature optimization is the root of all evil
+\begin_inset Quotes erd
+\end_inset
+
+, and thus the best optimisation should be performed at run time, as the
+ confusion it creates in the thought processes before this point works to
+ the detriment of a project.
+ Some attempts at optimisation are discussed below.
+\end_layout
+
+\begin_layout Subsection
+Implementations
+\end_layout
+
+\begin_layout Subsubsection
+First generation: x and y matrices
+\end_layout
+
+\begin_layout Standard
+Once the formulas in Appendix A had been derived, implementing a correct
+ simulation in Python took around 30 minutes.
+ The approach taken was to split the problem into the classes Particle (represen
+ting a particle), Ring (representing a ring) and Headless (representing
+ a non-interactive simulation).
+ Each Particle object contains two matrices, the 
+\begin_inset Formula $\left[\begin{array}{c}
+x\\
+x^{\prime}\end{array}\right]$
+\end_inset
+
+matrix and the 
+\begin_inset Formula $\left[\begin{array}{c}
+y\\
+y^{\prime}\end{array}\right]$
+\end_inset
+
+matrix.
+ The implementation of these matrices is taken from the 
+\emph on
+Numpy
+\emph default
+ library of numerical and scientific Python code.
+ The Ring contains a list of particles and two matrices, the 
+\begin_inset Formula $\left[\begin{array}{cc}
+\cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{1-n}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right)\\
+-\frac{\sqrt{1-n}}{r_{0}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right)\end{array}\right]$
+\end_inset
+
+matrix for x transformations and the 
+\begin_inset Formula $\left[\begin{array}{cc}
+\cos\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{n}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right)\\
+-\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right)\end{array}\right]$
+\end_inset
+
+ matrix for y transformations.
+\end_layout
+
+\begin_layout Standard
+The Ring can be told to step its list of Particles through a number of sections
+ (ie.
+ apply the matrices the given number of times).
+ At each step the Particles list is pruned of those which fall outside the
+ Ring's boundaries.
+ The full simulation is achieved by performing 
+\begin_inset Formula $N_{sections}\times N_{rotations}$
+\end_inset
+
+ steps.
+\end_layout
+
+\begin_layout Standard
+This works well, but is rather slow.
+ Timing results show a total running time of 140 seconds to simulate 19
+ Rings (with field indices from 0.05-0.95 inclusive), with 40 sections each,
+ with the simulation sending 100 particles around each 50 times.
+ This is a total of 7.6 million multiplications of 2x1 vectors by 2x2 matrices,
+ around 50,000 multiplications per second.
+\end_layout
+
+\begin_layout Standard
+Some speed increases were achieved through use of Python's functional abstractio
+ns, replacing the loop multiplying the matrices with a call to 
+\emph on
+map
+\emph default
+ the appropriate function to the particles list, and the loop checking for
+ escaped particles was replaced with a call to 
+\emph on
+filter
+\emph default
+ the list using a position-checking function.
+ This made the code slightly clearer and brought the running time for the
+ setup described above to 55 seconds, a reduction of 60%.
+\end_layout
+
+\begin_layout Standard
+Further optimisation focused on making the simulation run concurrently across
+ both CPU cores of the machine being used for development.
+ Use of the 
+\emph on
+Threading
+\emph default
+ module was abandoned due to the CPython implementation's 
+\begin_inset Quotes eld
+\end_inset
+
+Global Interpreter Lock
+\begin_inset Quotes erd
+\end_inset
+
+ which prevents multiple threads from running concurrently in one process.
+ Next the 
+\emph on
+Processing
+\emph default
+ module was used, which has an identical API to 
+\emph on
+Threading
+\emph default
+ but spawns multiple processes rather than threads.
+ These run concurrently, giving a 100% speed increase on a dual-core machine,
+ however the lack of shared memory between processes made communicating
+ the results into the output stage difficult.
+ The 
+\emph on
+Multiprocessing
+\emph default
+ module was then used, which once again follows the same API, but offers
+ queues sharable between processes, which made it more straightforward to
+ send results back, and even allowed regular progress to be reported, leading
+ to a rudimentary GUI written using the 
+\emph on
+Pygame
+\emph default
+ graphics library.
+\end_layout
+
+\begin_layout Subsubsection
+Second generation: Combined x and y matrices
+\end_layout
+
+\begin_layout Standard
+The next iteration of the simulation forked it and replaced the radial and
+ vertical vectors with a single, 4 row vector, and the associated transformation
+ matrices with a single 4x4 matrix, shown at the end of Appendix A.
+ The main advantage to this is that the Particle class becomes simply a
+ wrapper around its Numpy matrix, however this iteration never achieved
+ satisfactory results.
+\end_layout
+
+\begin_layout Subsubsection
+Third Generation: FORTRAN enhanced
+\end_layout
+
+\begin_layout Standard
+Using the 
+\emph on
+f2py
+\emph default
+ tool it is trivial to call FORTRAN subroutines from Python, thus the simulation
+ was forked and FORTRAN code was incorporated for quickly creating the large
+ numbers of particles required, stepping through the sections and multiplying
+ matrices stored in row-major order (ie.
+ row1 column1, row1 column2, row2 column1, row2 column2, etc.).
+ The use of FORTRAN, however, gave consistently wrong results, with each
+ even-indexed Ring losing all its Particles whilst the odd-indexed Rings
+ gave the results expected.
+ This occurred for the custom FORTRAN as well as simple calls to FORTRAN's
+ built-in MATMUL subroutine to multiply two matrices.
+ After much debugging the embedded FORTRAN was abandoned.
+\end_layout
+
+\begin_layout Subsubsection
+Fourth Generation: C++ Compiled
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+shedskin
+\emph default
+ tool allows compilation of a subset of Python, which does not utilise its
+ dynamic abilities, into C++ code.
+ This can then be compiled and used by any other Python program as if it
+ were native, although losing the duck typing of its functions.
+ The simulation was forked and hacked until it did not use any dynamic types
+ or other dynamic features, then was compiled to C++ by shedskin and then
+ to machine code with GCC.
+ After much further hacking the compiled modules could be used concurrently
+ by each process.
+ This compiled version, however, did not give satisfactory results, thus
+ after much debugging it too was abandoned.
+\end_layout
+
+\begin_layout Subsubsection
+Fifth Generation: Rewritten
+\end_layout
+
+\begin_layout Standard
+The final iteration of the simulation was made from scratch, once work on
+ the previous solutions ensured that the problem was better understood.
+ This version is pure Python, consisting of a Matrix class (implementing
+ a custom Python implementation of general matrices, including operator
+ overloading) a Particle class (containing a Matrix and whether the particle
+ has escaped vertically or horizontally), a RingSection class (containing
+ a Matrix and multiplies with a Particle), a Ring class (containing a list
+ of RingSections, a list of Particles and an index of the current position
+ in the sections list) and a Simulation class (which initialises everything).
+ The source for this implementation is in Appendix B.
+ Various forks of this code were used to generate the statistics in section
+ 1.2.
+\end_layout
+
+\begin_layout Standard
+Some optimisations were attempted using Pyrex to compile Python into C but
+ this produced some speed ups and some slow downs.
+ The code was not modified.
+ Attempts were also made to JIT compile with PyPy, but the source would
+ not build for lack of memory.
+\end_layout
+
+\begin_layout Subsection
+Evaluation
+\end_layout
+
+\begin_layout Standard
+In total for this simulation there have been 5 Python implementations, 3
+ FORTRAN subroutines, 2 Haskell attempts, 1 Reia (Erlang) attempt and 2
+ attempts to construct C extensions for Python.
+ In the end a pure Python approach was taken, as its simplicity cannot be
+ made up for by performance optimisations.
+ The simulation works, and will continue to work for as long as a computer
+ is capable of running Python 2.x scripts.
+ The code has been tested in 3 different Python implementations, 
+\emph on
+CPython 2.5
+\emph default
+, 
+\emph on
+Unladened Swallow
+\emph default
+ and 
+\emph on
+PyPy 1.0
+\emph default
+.
+ Whilst speed could improve dramatically, the simulation is not the correct
+ place to fix this, the correct area to address speed issues is in the interpret
+er/compiler.
+ There are on-going efforts to improve Python performance such as the 
+\emph on
+StarKiller
+\emph default
+ and 
+\emph on
+shedskin
+\emph default
+ C++ translators, the 
+\emph on
+Pyrex
+\emph default
+ C translator, the 
+\emph on
+Psyco
+\emph default
+ x86 machine code translator and its successor the 
+\emph on
+PyPy
+\emph default
+ project, which JIT compiles to CLI (Common Language Infrastructure) and
+ Java bytecode, LLVM instructions, C and machine code (amongst other things).
+ This is an active area of research, and the widespread use of Python ensures
+ it gets some attention (for instance Google's 
+\emph on
+Unladened Swallow
+\emph default
+ project is applying as much state-of-the-art knowledge to CPython as possible)
+\end_layout
+
+\begin_layout Section
+Appendices
+\end_layout
+
+\begin_layout Subsection*
+Appendix A: Derivation of Particle Mechanics
+\end_layout
+
+\begin_layout Standard
+Here we derive the equations of motion for a charged particle in a magnetic
+ storage ring from classical electromagnetism, representing them in matrix
+ form.
+\end_layout
+
+\begin_layout Standard
+Firstly it is known from Maxwell's equations that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\nabla\cdot\mathbf{B}=0\label{eq:maxwell}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ is a magnetic field, from electromagnetism that the force on a particle
+ with charge 
+\begin_inset Formula $e$
+\end_inset
+
+, moving through a magnetic field 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ with a velocity 
+\begin_inset Formula $v$
+\end_inset
+
+ perpendicular to the field is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\mathbf{F_{\mathrm{MAGNETIC}}}=e\mathbf{v}\times\mathcal{\mathbf{B}}\label{eq:charged}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+from classical mechanics the centripetal force on a body with mass 
+\begin_inset Formula $m$
+\end_inset
+
+ in a stable orbit of radius 
+\begin_inset Formula $r$
+\end_inset
+
+ is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{F}_{CP}=\frac{mv^{2}}{r}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and from Newton the net force on a body with mass 
+\begin_inset Formula $m$
+\end_inset
+
+ and displacement 
+\begin_inset Formula $\mathbf{d}$
+\end_inset
+
+ is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\mathbf{F}_{NET}=-m\ddot{\mathbf{d}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Considering an infinitesimal section of the ring there is no curvature,
+ so Cartesian coordinates can be used without complication.
+ For simplicity the 
+\begin_inset Formula $z$
+\end_inset
+
+ axis is defined as the propagation direction, making the length of the
+ section 
+\begin_inset Formula $dz$
+\end_inset
+
+.
+ This gives equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:maxwell"
+
+\end_inset
+
+ the form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial B_{x}}{\partial x}+\frac{\partial B_{y}}{\partial y}+\frac{\partial B_{z}}{\partial z}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the ring is symmetric, and thus has an arbitrary origin, it must be
+ true that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial B_{z}}{\partial z}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\frac{\partial B_{x}}{\partial x}+\frac{\partial B_{y}}{\partial y}=0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The coordinates can be further defined such that the 
+\begin_inset Formula $x$
+\end_inset
+
+ axis is always parallel to the major radius of the ring, 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+, with its origin at the centre of the ring, and the 
+\begin_inset Formula $y$
+\end_inset
+
+ axis is perpendicular to the 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ axes with it origin on the median plane containing the ring.
+ Motion parallel and perpendicular to the ring's major radius (hereafter
+ referred to as radial and vertical respectively) can be considered independentl
+y.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename diagram.svg
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Storage ring diagram.
+ Origin is at the centre of the ring.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Radial Motion
+\end_layout
+
+\begin_layout Standard
+The radial component of motion is parallel to the 
+\begin_inset Formula $x$
+\end_inset
+
+ axis.
+ Considering only this direction, equation
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:charged"
+
+\end_inset
+
+ is simply
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+F_{x}=evB_{y}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $v$
+\end_inset
+
+ is the component of the velocity perpendicular to the 
+\begin_inset Formula $y$
+\end_inset
+
+ axis.
+ 
+\end_layout
+
+\begin_layout Standard
+By equating the radial forces, and taking 
+\begin_inset Formula $x$
+\end_inset
+
+ to be the radial displacement from the particle beam's centre, the equilibrium
+ radius can be found
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+evB_{y}=\frac{mv^{2}}{r_{0}+x}\label{eq:evbr}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{evB_{y}}{mv^{2}}=\frac{1}{r_{0}+x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $x\ll r_{0}$
+\end_inset
+
+, the first two terms of the binomial expansion of the right hand side can
+ be used as a valid approximation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(r_{0}+x\right)^{-1}\simeq\frac{1}{r_{0}}-\frac{x}{r_{0}^{2}}=\frac{r_{0}-x}{r_{0}^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\frac{evB_{y}}{mv^{2}}\simeq\frac{r_{0}-x}{r_{0}^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+evB_{y}\simeq\frac{r_{0}-x}{r_{0}^{2}}mv^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This describes the forces in the 
+\begin_inset Formula $z$
+\end_inset
+
+ direction, but to generalise to the plane perpendicular to 
+\begin_inset Formula $y$
+\end_inset
+
+ the radial forces need to be considered.
+ By including these, in the form of 
+\begin_inset Formula $m\ddot{x}$
+\end_inset
+
+, all forces in the plane of the ring can be related by equating the required
+ centripetal force with the sum of the electromagnetic and the radial force
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m\ddot{x}+e\mathbf{v}B_{y}=\frac{r_{0}-x}{r_{0}^{2}}m\mathbf{v}^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+e\mathbf{v}B_{y}=m\left(\frac{r_{0}-x}{r_{0}^{2}}\mathbf{v}^{2}-\ddot{x}\right)\label{eq:evb}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the magnetic field 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ changes through space, it is necessary to consider 
+\begin_inset Formula $B_{y}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Since particle positions are characterised by the radius 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+ and their displacement from it 
+\begin_inset Formula $x$
+\end_inset
+
+, where 
+\begin_inset Formula $x\ll r_{0}$
+\end_inset
+
+, the vertical field component at a particle's position can be approximated
+ using Euler's method
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{y}\left(r_{0}+x\right)\simeq B_{y}\left(r_{0}\right)+x\frac{\partial B_{y}}{\partial x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now the field index 
+\begin_inset Formula $n$
+\end_inset
+
+ can be defined such that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+n\equiv-\frac{r_{0}}{B_{y}}\cdot\frac{\partial B_{y}}{\partial x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+to give the vertical field component the following form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{y}\left(r_{0}+x\right)\simeq B_{y}\left(r_{0}\right)+x\frac{\partial B_{y}}{\partial x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+B_{y}\left(r_{0}+x\right) & \simeq & B_{y}\left(r_{0}\right)+x\frac{\partial B_{y}}{\partial x}\cdot\frac{r_{0}}{r_{0}}\cdot\frac{B_{y}\left(r_{0}\right)}{B_{y}\left(r_{0}\right)}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+B_{y}\left(r_{0}+x\right) & \simeq & B_{y}\left(r_{0}\right)\left(1+\frac{x\frac{\partial B_{y}}{\partial x}\cdot\frac{r_{0}}{B_{y}\left(r_{0}\right)}}{r_{0}}\right)\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+B_{y}\left(r_{0}+x\right)\simeq B_{y}\left(r_{0}\right)\left(1-\frac{nx}{r_{0}}\right)\label{eq:bnapprox}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Replacing 
+\begin_inset Formula $B_{y}$
+\end_inset
+
+ with this function approximation in equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:evbr"
+
+\end_inset
+
+ results in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+e\mathbf{v}B_{y}\left(r_{0}\right)\left(1-\frac{nx}{r_{0}}\right)=m\left(\frac{r_{0}-x}{r_{0}^{2}}\mathbf{v}^{2}-\ddot{x}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(1-\frac{nx}{r_{0}}\right)=\frac{m}{e\mathbf{v}B_{y}\left(r_{0}\right)}\left(\frac{r_{0}-x}{r_{0}^{2}}\mathbf{v}^{2}-\ddot{x}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:evbr"
+
+\end_inset
+
+we can say 
+\begin_inset Formula $r_{0}=\frac{mv}{eB_{y}\left(r_{0}\right)}$
+\end_inset
+
+ when the orbit is at 
+\begin_inset Formula $r_{0}$
+\end_inset
+
+, so the above becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+1-\frac{nx}{r_{0}}=\frac{r_{0}\left(r_{0}-x\right)}{r_{0}^{2}}-\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore1=\frac{r_{0}-x}{r_{0}}+\frac{nx}{r_{0}}-\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+1=\frac{r_{0}-x+nx}{r_{0}}-\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+1=\frac{r_{0}+x\left(n-1\right)}{r_{0}}-\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+1=\frac{r_{0}}{r_{0}}+\frac{x\left(n+1\right)}{r_{0}}-\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)}=1-1+\frac{x\left(n-1\right)}{r_{0}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{m\ddot{x}}{evB_{y}\left(r_{0}\right)r_{0}}=\frac{x\left(n-1\right)}{r_{0}^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{mv\ddot{x}}{eB_{y}\left(r_{0}\right)r_{0}}=\frac{v^{2}x\left(n-1\right)}{r_{0}^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting in 
+\begin_inset Formula $r_{0}=\frac{mv}{eB_{y}\left(r_{0}\right)}$
+\end_inset
+
+ this becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{r_{0}}{r_{0}}\ddot{x}=\frac{v^{2}x\left(n-1\right)}{r_{0}^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\ddot{x}=-\left(\frac{v^{2}\left(1-n\right)}{r_{0}^{2}}\right)x\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the chain rule of differentiation 
+\begin_inset Formula $\frac{d^{2}x}{dz^{2}}=\frac{d^{2}x}{dt^{2}}\cdot\frac{d^{2}t}{dz^{2}}$
+\end_inset
+
+ and, since 
+\begin_inset Formula $\frac{dz}{dt}=v$
+\end_inset
+
+, 
+\begin_inset Formula $\frac{dt}{dz}=\frac{1}{v}$
+\end_inset
+
+ and thus 
+\begin_inset Formula $\frac{d^{2}t}{dz^{2}}=\frac{1}{v^{2}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+By denoting differentials with regards to 
+\begin_inset Formula $z$
+\end_inset
+
+ with a prime (
+\begin_inset Formula $\prime$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x^{\prime\prime}=\frac{\ddot{x}}{v^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x^{\prime\prime}=-\left(\frac{1-n}{r_{0}^{2}}\right)x\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a stable orbit 
+\begin_inset Formula $n<1$
+\end_inset
+
+ and acceleration is directed towards the central orbit distance.
+ This gives an equation of the form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+x^{\prime\prime}=-\omega^{2}x\label{eq:xprimeprime}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\omega=\sqrt{\frac{1-n}{r_{0}^{2}}}$
+\end_inset
+
+ which is simple harmonic motion.
+\end_layout
+
+\begin_layout Standard
+This means that 
+\begin_inset Formula $x$
+\end_inset
+
+ must have the solutions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x=A\cos\left(\frac{\sqrt{1-n}}{r_{0}}\cdot z\right)+B\sin\left(\frac{\sqrt{1-n}}{r_{0}}\cdot z\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Differentiating 
+\begin_inset Formula $x$
+\end_inset
+
+ with regards to 
+\begin_inset Formula $z$
+\end_inset
+
+ gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x^{\prime}=-A\frac{\sqrt{1-n}}{r_{0}}\sin\left(\frac{\sqrt{1-n}}{r_{0}}z\right)+B\frac{\sqrt{1-n}}{r_{0}}\cos\left(\frac{\sqrt{1-n}}{r_{0}}z\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let the initial state at 
+\begin_inset Formula $z=0$
+\end_inset
+
+ be 
+\begin_inset Formula $x=x_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $x^{\prime}=x_{1}^{\prime}$
+\end_inset
+
+, thus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x_{1}=A\cos0+B\sin0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore x_{1}=A\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x_{1}^{\prime}=-A\frac{\sqrt{1-n}}{r_{0}}\sin0+B\frac{\sqrt{1-n}}{r_{0}}\cos0\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x_{1}^{\prime}=B\frac{\sqrt{1-n}}{r_{0}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore B=\frac{x_{1}^{\prime}r_{0}}{\sqrt{1-n}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now the above equations become
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x=x_{1}\cos\left(\frac{\sqrt{1-n}}{r_{0}}\cdot z\right)+\frac{x_{1}^{\prime}r_{0}}{\sqrt{1-n}}\sin\left(\frac{\sqrt{1-n}}{r_{0}}\cdot z\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x^{\prime}=-x_{1}\frac{\sqrt{1-n}}{r_{0}}\sin\left(\frac{\sqrt{1-n}}{r_{0}}z\right)+\frac{x_{1}^{\prime}r_{0}}{\sqrt{1-n}}\frac{\sqrt{1-n}}{r_{0}}\cos\left(\frac{\sqrt{1-n}}{r_{0}}z\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x^{\prime}=-x_{1}\frac{\sqrt{1-n}}{r_{0}}\sin\left(\frac{\sqrt{1-n}}{r_{0}}z\right)+x_{1}^{\prime}\cos\left(\frac{\sqrt{1-n}}{r_{0}}z\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These now express the approximate position (
+\begin_inset Formula $x$
+\end_inset
+
+) and divergence (
+\begin_inset Formula $x\prime$
+\end_inset
+
+) at a position 
+\begin_inset Formula $z$
+\end_inset
+
+ around the ring, relative to a previous position (
+\begin_inset Formula $x_{1}$
+\end_inset
+
+) and divergence (
+\begin_inset Formula $x_{1}\prime$
+\end_inset
+
+).
+ Rather than the above formulaic representation, with the initial values
+ encoded into the formula, a matrix representation splits these values away
+ from the constants to give
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left[\begin{array}{c}
+x_{2}\\
+x_{2}^{\prime}\end{array}\right]=\left[\begin{array}{cc}
+\cos\left(\sqrt{1-n}\frac{z}{r_{0}}\right) & \frac{r_{0}}{\sqrt{1-n}}\sin\left(\sqrt{1-n}\frac{z}{r_{0}}\right)\\
+-\frac{\sqrt{1-n}}{r_{0}}\sin\left(\sqrt{1-n}\frac{z}{r_{0}}\right) & \cos\left(\sqrt{1-n}\frac{z}{r_{0}}\right)\end{array}\right]\left[\begin{array}{c}
+x_{1}\\
+x_{1}^{\prime}\end{array}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since approximations have been made in the construction of this result,
+ the smaller the value of 
+\begin_inset Formula $z$
+\end_inset
+
+ used, the more accurate the result will be.
+ Taking an infinitesimal section of length 
+\begin_inset Formula $dz$
+\end_inset
+
+ gives us the best approximation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left[\begin{array}{c}
+x_{2}\\
+x_{2}^{\prime}\end{array}\right]=\left[\begin{array}{cc}
+\cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{1-n}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right)\\
+-\frac{\sqrt{1-n}}{r_{0}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right)\end{array}\right]\left[\begin{array}{c}
+x_{1}\\
+x_{1}^{\prime}\end{array}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Vertical Motion
+\end_layout
+
+\begin_layout Standard
+A similar thread can be used to derive a matrix representation of the vertical
+ (
+\begin_inset Formula $y$
+\end_inset
+
+) motion.
+\end_layout
+
+\begin_layout Standard
+Using the same binomial expansion method for the 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ field as in the radial case, the perpendicular (
+\begin_inset Formula $x$
+\end_inset
+
+) component is found
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+B_{x}\left(y\right)\simeq y\frac{\partial B_{x}}{\partial y}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:maxwell"
+
+\end_inset
+
+ it is known that 
+\begin_inset Formula $\frac{\partial B_{x}}{\partial x}=-\frac{\partial B_{y}}{dy}$
+\end_inset
+
+ and that 
+\begin_inset Formula $\nabla\cdot\mathbf{B}=0$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $\mathbf{B}$
+\end_inset
+
+ cannot depend on 
+\begin_inset Formula $z$
+\end_inset
+
+, since the ring is symmetric, it can only depend on 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+, thus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\partial B_{x}}{\partial y}=\frac{\partial B_{y}}{\partial x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore n=-\frac{r_{0}}{B_{y}}\cdot\frac{\partial B_{y}}{\partial x}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=-\frac{r_{0}}{B_{y}}\cdot\frac{\partial B_{x}}{\partial y}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\frac{\partial B_{x}}{\partial y}=-\frac{nB_{y}}{r_{0}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting this into equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:charged"
+
+\end_inset
+
+, perpendicular to the vertical, gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+m\ddot{y}=B_{x}\left(y\right)ev\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=y\frac{\partial B_{x}}{\partial y}ev\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=-\frac{yevnB_{y}}{r_{0}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore\ddot{y}=-\frac{evB_{y}n}{r_{0}m}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+=-\frac{ev^{2}B_{y}n}{r_{0}mv}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $r_{0}=\frac{mv}{eB_{y}}$
+\end_inset
+
+ this becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{y}=-yn\frac{v^{2}}{r_{0}^{2}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $=-\left(\frac{nv^{2}}{r_{0}^{2}}\right)$
+\end_inset
+
+y
+\end_layout
+
+\begin_layout Standard
+Again, from the chain rule, 
+\begin_inset Formula $\frac{d^{2}y}{dz^{2}}=\frac{d^{2}y}{dt^{2}}\cdot\frac{d^{2}t}{dz^{2}}=\frac{d^{2}y}{dt^{2}}\cdot\frac{1}{v^{2}}$
+\end_inset
+
+, so
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+y^{\prime\prime}=-\left(\frac{n}{r_{0}^{2}}\right)y\label{eq:yprimeprime}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is once again simple harmonic motion for 
+\begin_inset Formula $n>0$
+\end_inset
+
+, with general solution
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+y=C\cos\left(\sqrt{n}\frac{z}{r_{0}}\right)+D\sin\left(\sqrt{n}\frac{z}{r_{0}}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore y^{\prime}=-C\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{z}{r_{0}}\right)+D\frac{\sqrt{n}}{r_{0}}\cos\left(\sqrt{n}\frac{z}{r_{0}}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $C$
+\end_inset
+
+ and 
+\begin_inset Formula $D$
+\end_inset
+
+ can be calculated in the same way as in the radial case, yielding a transformat
+ion matrix
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{c}
+y_{2}\\
+y_{2}^{\prime}\end{array}\right]=\left[\begin{array}{cc}
+\cos\left(\sqrt{n}\frac{z}{r_{0}}\right) & \frac{r_{0}}{\sqrt{n}}\sin\left(\sqrt{n}\frac{z}{r_{0}}\right)\\
+-\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{z}{r_{0}}\right) & \cos\left(\sqrt{n}\frac{z}{r_{0}}\right)\end{array}\right]\left[\begin{array}{c}
+y_{1}\\
+y_{1}^{\prime}\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which for an infinitesimal section 
+\begin_inset Formula $dz$
+\end_inset
+
+ becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{c}
+y_{2}\\
+y_{2}^{\prime}\end{array}\right]=\left[\begin{array}{cc}
+\cos\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{n}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right)\\
+-\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right)\end{array}\right]\left[\begin{array}{c}
+y_{1}\\
+y_{1}^{\prime}\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Combined Matrix
+\end_layout
+
+\begin_layout Standard
+In some implementations, the radial and vertical matrices have been combined.
+ This is easily achieved by combining the radial and vertical values into
+ a single vector 
+\begin_inset Formula $\left[\begin{array}{c}
+x\\
+x^{\prime}\\
+y\\
+y^{\prime}\end{array}\right]$
+\end_inset
+
+ and extending the transformation matrix to be the following 
+\begin_inset Formula $4\times4$
+\end_inset
+
+, matrix
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{cccc}
+\cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{1-n}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & 0 & 0\\
+-\frac{\sqrt{1-n}}{r_{0}}\sin\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{1-n}\frac{dz}{r_{0}}\right) & 0 & 0\\
+0 & 0 & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \frac{r_{0}}{\sqrt{n}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right)\\
+0 & 0 & -\frac{\sqrt{n}}{r_{0}}\sin\left(\sqrt{n}\frac{dz}{r_{0}}\right) & \cos\left(\sqrt{n}\frac{dz}{r_{0}}\right)\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Motion in Free Space
+\end_layout
+
+\begin_layout Standard
+In free space, ie.
+ in a section without surrounding magnets, the field index 
+\begin_inset Formula $n$
+\end_inset
+
+ becomes zero.
+ This simplifes the transformation matrix to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left[\begin{array}{c}
+x_{2}\\
+x_{2}^{\prime}\\
+y_{2}\\
+y_{2}^{\prime}\end{array}\right]=\left[\begin{array}{cccc}
+\cos\left(\frac{dz}{r_{0}}\right) & r_{0}\sin\left(\frac{dz}{r_{0}}\right) & 0 & 0\\
+-\frac{1}{r_{0}}\sin\left(\frac{dz}{r_{0}}\right) & \cos\left(\frac{dz}{r_{0}}\right) & 0 & 0\\
+0 & 0 & 1 & dz\\
+0 & 0 & 0 & 1\end{array}\right]\left[\begin{array}{c}
+x_{1}\\
+x_{1}^{\prime}\\
+y_{1}\\
+y_{1}^{\prime}\end{array}\right]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Phase-Space Shape
+\end_layout
+
+\begin_layout Standard
+From equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xprimeprime"
+
+\end_inset
+
+ it is possible to derive the shape of the rings' acceptance, since we know
+ this simple harmonic motion can have the following solution
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+x=A\sin\left(\frac{\sqrt{1-n}}{r_{0}^{2}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore x^{\prime}=A\frac{\sqrt{1-n}}{r_{0}}\cos\left(\frac{\sqrt{1-n}}{r_{0}^{2}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From these we can derive the following
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{x}{A}=\sin\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{r_{0}}{\sqrt{1-n}}\frac{x^{\prime}}{A}=\cos\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(\frac{x}{A}\right)^{2}=\sin^{2}\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(\frac{r_{0}}{\sqrt{1-n}}\frac{x^{\prime}}{A}\right)^{2}=\cos^{2}\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Adding these last two equations together yields
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(\frac{x}{A}\right)^{2}+\left(\frac{r_{0}}{\sqrt{1-n}}\frac{x^{\prime}}{A}\right)^{2}=\sin^{2}\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)+\cos^{2}\left(\frac{\sqrt{1-n}}{r_{0}}z+\phi\right)=1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{x^{2}}{A^{2}}+\frac{r_{0}^{2}\left(x^{\prime}\right)^{2}}{A^{2}\left(1-n\right)}=1\label{eq:harmonicx}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since this is simple harmonic motion, from equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:xprimeprime"
+
+\end_inset
+
+ we can say 
+\begin_inset Formula $\frac{1-n}{r_{0}^{2}}=\omega^{2}=\left(\frac{2\pi}{\lambda}\right)^{2}$
+\end_inset
+
+ where 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is the wavelength of the oscillation.
+ Using this we can transform the above equation in to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{x^{2}}{A^{2}}+\frac{\left(x^{\prime}\right)^{2}}{A^{2}\left(\frac{2\pi}{\lambda}\right)^{2}}=1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we call the wavelength 
+\begin_inset Formula $2\Lambda\equiv\lambda$
+\end_inset
+
+ then 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1-n}{r_{0}^{2}}=\left(\frac{2\pi}{\lambda}\right)^{2}\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1-n}{r_{0}^{2}}=\left(\frac{2\pi}{2\Lambda}\right)^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1-n}{r_{0}^{2}}=\left(\frac{\pi}{\Lambda}\right)^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{1-n}{r_{0}^{2}}=\frac{\pi^{2}}{\Lambda^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{r_{0}^{2}}{1-n}=\frac{\Lambda^{2}}{\pi^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting this in to equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:harmonicx"
+
+\end_inset
+
+ gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{x^{2}}{A^{2}}+\frac{\Lambda^{2}\left(x^{\prime}\right)^{2}}{A^{2}\pi^{2}}=1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is an equation of the form 
+\begin_inset Formula $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}=1$
+\end_inset
+
+ which describes an ellipse, in this case in the dimensions 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $x^{\prime}$
+\end_inset
+
+, ie.
+ phase space.
+\end_layout
+
+\begin_layout Standard
+The same can be done vertically starting from equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:yprimeprime"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+y^{\prime\prime}=-\frac{n}{r_{0}^{2}}y\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore y=C\sin\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\therefore y^{\prime}=\frac{\sqrt{n}}{r_{0}}C\cos\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From these we can say
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{y}{C}=\sin\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{y^{\prime}r_{0}}{\sqrt{n}C}=\cos\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{y^{2}}{C^{2}}=\sin^{2}\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{r_{0}^{2}\left(y^{\prime}\right)^{2}}{nC^{2}}=\cos^{2}\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Adding these gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\frac{r_{0}^{2}\left(y^{\prime}\right)^{2}}{nC^{2}}+\frac{y^{2}}{C^{2}}=\sin^{2}\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)+\cos^{2}\left(\frac{\sqrt{n}}{r_{0}}z+\Omega\right)=1\label{eq:harmonicy}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:yprimeprime"
+
+\end_inset
+
+ it is known, from simple harmonic motion, that 
+\begin_inset Formula $\frac{n}{r_{0}^{2}}=\left(\frac{2\pi}{\xi}\right)^{2}$
+\end_inset
+
+ where 
+\begin_inset Formula $\xi$
+\end_inset
+
+ is the wavelength of the oscillations.
+ Let 
+\begin_inset Formula $2\Xi\equiv\xi$
+\end_inset
+
+ then
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{n}{r_{0}^{2}}=\left(\frac{2\pi}{\xi}\right)^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{n}{r_{0}^{2}}=\left(\frac{2\pi}{2\Xi}\right)^{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{n}{r_{0}^{2}}=\frac{\pi^{2}}{\Xi^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{r_{0}^{2}}{n}=\frac{\Xi^{2}}{\pi^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting this into equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:harmonicy"
+
+\end_inset
+
+ gives the following
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\Xi^{2}\left(y^{\prime}\right)^{2}}{\pi^{2}C^{2}}+\frac{y^{2}}{C^{2}}=1\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is also an elliptical equation of the form 
+\begin_inset Formula $\frac{x^{2}}{a^{2}}+\frac{y^{2}}{b^{2}}=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Appendix B: Final Source Code
+\end_layout
+
+\begin_layout Standard
+The following is the complete source code, in Python, of the simulation's
+ final incarnation.
+ This is available electronically from its Git distributed version control
+ repository at http://github.com/Warbo/ParticleStorageRingSimulation/tree/master.
+\end_layout
+
+\begin_layout Subsubsection*
+Matrix.py
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+  
+\backslash
+noindent 
+\backslash
+ttfamily 
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#!/usr/bin/env
+\backslash
+ python}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{class
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{"""This
+\backslash
+ custom
+\backslash
+ class
+\backslash
+ is
+\backslash
+ a
+\backslash
+ pure
+\backslash
+ Python
+\backslash
+ implementation
+\backslash
+ of
+\backslash
+ matrices."""}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore init
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{rows}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{columns}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{rows
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{column
+\backslash
+textunderscore number
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{columns
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{r
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwa{None}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{new
+\backslash
+textunderscore column
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{column
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{column
+\backslash
+textunderscore number}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{new
+\backslash
+textunderscore column}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{row}
+\backslash
+hlsym{{]}
+\backslash
+ =
+\backslash
+ }
+\backslash
+hlstd{new
+\backslash
+textunderscore column
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore setitem
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{position}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{value}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{pos
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{position}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{split}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlstr{','}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{int}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{pos}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{column
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{int}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{pos}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{row}
+\backslash
+hlsym{{]}{[}}
+\backslash
+hlstd{column}
+\backslash
+hlsym{{]}
+\backslash
+ =
+\backslash
+ }
+\backslash
+hlstd{value
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore getitem
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{position}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{pos
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{position}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{split}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlstr{','}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{int}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{pos}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{column
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{int}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{pos}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{row}
+\backslash
+hlsym{{]}{[}}
+\backslash
+hlstd{column}
+\backslash
+hlsym{{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{values}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{"""Generates
+\backslash
+ a
+\backslash
+ matrix
+\backslash
+ with
+\backslash
+ values
+\backslash
+ given
+\backslash
+ in
+\backslash
+ the
+\backslash
+ (row{-}major)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstr{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstr{nested
+\backslash
+ list
+\backslash
+ given."""}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{rows
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{len}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{values}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{columns
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{len}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{values}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{rows}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{columns}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{r}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{values}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{c}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{element
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{row}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{r}
+\backslash
+hlsym{)+}
+\backslash
+hlstd{}
+\backslash
+hlstr{','}
+\backslash
+hlstd{}
+\backslash
+hlsym{+}
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{c}
+\backslash
+hlsym{){]}
+\backslash
+ =
+\backslash
+ }
+\backslash
+hlstd{element
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{get
+\backslash
+textunderscore column}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{index}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{column
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{column}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{row}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{index}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{column
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore mul
+\backslash
+textunderscore 
+\backslash
+textunderscore 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{other}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{"""Returns
+\backslash
+ a
+\backslash
+ Matrix
+\backslash
+ of
+\backslash
+ the
+\backslash
+ result
+\backslash
+ of
+\backslash
+ multiplying
+\backslash
+ this
+\backslash
+ matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstr{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstr{with
+\backslash
+ the
+\backslash
+ given
+\backslash
+ matrix."""}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ First
+\backslash
+ check
+\backslash
+ that
+\backslash
+ multiplication
+\backslash
+ is
+\backslash
+ defined
+\backslash
+ for
+\backslash
+ these
+\backslash
+ matrices}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ not
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{column
+\backslash
+textunderscore number
+\backslash
+ }
+\backslash
+hlsym{==
+\backslash
+ }
+\backslash
+hlstd{other}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{raise
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwc{ValueError}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlstr{"Matrix
+\backslash
+ dimensions
+\backslash
+ do
+\backslash
+ not
+\backslash
+ match."}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Now
+\backslash
+ make
+\backslash
+ the
+\backslash
+ resulting
+\backslash
+ matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{other}
+\backslash
+hlsym{.}
+\backslash
+hlstd{column
+\backslash
+textunderscore number}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Now
+\backslash
+ calculate
+\backslash
+ each
+\backslash
+ element
+\backslash
+ of
+\backslash
+ the
+\backslash
+ new
+\backslash
+ matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{r}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{c}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{element
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{row}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ The
+\backslash
+ current
+\backslash
+ element
+\backslash
+ is
+\backslash
+ the
+\backslash
+ sum
+\backslash
+ of
+\backslash
+ the
+\backslash
+ elements
+\backslash
+ of}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ this
+\backslash
+ matrix's
+\backslash
+ row
+\backslash
+ and
+\backslash
+ the
+\backslash
+ other
+\backslash
+ matrix's
+\backslash
+ column}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{i
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{row
+\backslash
+textunderscore number}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{r}
+\backslash
+hlsym{)+}
+\backslash
+hlstd{}
+\backslash
+hlstr{','}
+\backslash
+hlstd{}
+\backslash
+hlsym{+}
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{c}
+\backslash
+hlsym{){]}
+\backslash
+ +=
+\backslash
+ }
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{r}
+\backslash
+hlsym{{]}{[}}
+\backslash
+hlstd{i}
+\backslash
+hlsym{{]}
+\backslash
+ {*}
+\backslash
+ }
+\backslash
+hlstd{other}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{get
+\backslash
+textunderscore column}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{c}
+\backslash
+hlsym{){[}}
+\backslash
+hlstd{i}
+\backslash
+hlsym{{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore str
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{"{[}}
+\backslash
+hlesc{$
+\backslash
+backslash$n}
+\backslash
+hlstr{"}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{row
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{'
+\backslash
+ '}
+\backslash
+hlstd{
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{row}
+\backslash
+hlsym{)
+\backslash
+ +
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{'}
+\backslash
+hlesc{$
+\backslash
+backslash$n}
+\backslash
+hlstr{'}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{'{]}'}
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{return
+\backslash
+textunderscore string
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ m
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+mbox{} 
+\backslash
+normalfont
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Particle.py
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\backslash
+ttfamily 
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#!/usr/bin/env
+\backslash
+ python}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{class
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{object}
+\backslash
+hlstd{}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore init
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}}
+\backslash
+hlstd{}
+\backslash
+hlkwa{False}
+\backslash
+hlstd{}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{False}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{x}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{y}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{x
+\backslash
+textunderscore divergence}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{y
+\backslash
+textunderscore divergence}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{Matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{m}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{({[}{[}}
+\backslash
+hlstd{x}
+\backslash
+hlsym{{]},{[}}
+\backslash
+hlstd{x
+\backslash
+textunderscore divergence}
+\backslash
+hlsym{{]},{[}}
+\backslash
+hlstd{y}
+\backslash
+hlsym{{]},{[}}
+\backslash
+hlstd{y
+\backslash
+textunderscore divergence}
+\backslash
+hlsym{{]}{]}))}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore str
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{'P'}
+\backslash
+hlstd{
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ p
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{Matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{m}
+\backslash
+hlsym{)}
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+mbox{} 
+\backslash
+normalfont
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+RingSection.py
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\backslash
+ttfamily 
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#!/usr/bin/env
+\backslash
+ python}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Particle}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{class
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{RingSection}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{object}
+\backslash
+hlstd{}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore init
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{matrix
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore mul
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{lost
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{to
+\backslash
+textunderscore return
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{Particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{Particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix
+\backslash
+ }
+\backslash
+hlsym{{*}
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{to
+\backslash
+textunderscore return}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{lost
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{to
+\backslash
+textunderscore return}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+mbox{} 
+\backslash
+normalfont
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Ring.py
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\backslash
+ttfamily 
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#!/usr/bin/env
+\backslash
+ python}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{RingSection}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Particle}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{class
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{EscapeException}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwc{Exception}
+\backslash
+hlstd{}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{pass}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{class
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{Ring}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{object}
+\backslash
+hlstd{}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{
+\backslash
+textunderscore 
+\backslash
+textunderscore init
+\backslash
+textunderscore 
+\backslash
+textunderscore }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+textunderscore sections}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{sections
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+textunderscore sections
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{xmax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{xmax
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{ymax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{ymax
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{step}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{steps}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{ps}
+\backslash
+hlsym{={[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{particle
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{{[}{-}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{steps
+\backslash
+textunderscore taken
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{try}
+\backslash
+hlstd{}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{section
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{sections}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{steps
+\backslash
+textunderscore taken
+\backslash
+ }
+\backslash
+hlsym{$>$=
+\backslash
+ }
+\backslash
+hlstd{steps}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{raise
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{EscapeException}
+\backslash
+hlstd{}
+\backslash
+hlsym{()}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{ps}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{section
+\backslash
+ }
+\backslash
+hlsym{{*}
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{is
+\backslash
+textunderscore escaped}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particle}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{raise
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{EscapeException}
+\backslash
+hlstd{}
+\backslash
+hlsym{()}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{steps
+\backslash
+textunderscore taken
+\backslash
+ }
+\backslash
+hlsym{+=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{except
+\backslash
+ }
+\backslash
+hlstd{EscapeException}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{pass}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ps}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{ps}
+\backslash
+hlsym{={[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{is
+\backslash
+textunderscore escaped}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{self}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{abs}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlstr{'0,0'}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})
+\backslash
+ $>$
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}
+\backslash
+ =
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{True}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{abs}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{matrix}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlstr{'2,0'}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})
+\backslash
+ $>$
+\backslash
+ }
+\backslash
+hlstd{self}
+\backslash
+hlsym{.}
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}
+\backslash
+ =
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{True}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{any}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{)}
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+mbox{} 
+\backslash
+normalfont
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Simulation.py
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\backslash
+ttfamily 
+\backslash
+hlstd{}
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Ring}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{RingSection}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Particle}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{math}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{import
+\backslash
+ }
+\backslash
+hlstd{random}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore particles}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{number}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{xpmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ypmax}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{index
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{number}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{Particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{p}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore particle}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{random}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{random}
+\backslash
+hlstd{}
+\backslash
+hlsym{(){*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{2}
+\backslash
+hlstd{}
+\backslash
+hlsym{{*}}
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{){-}}
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{random}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{random}
+\backslash
+hlstd{}
+\backslash
+hlsym{(){*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{2}
+\backslash
+hlstd{}
+\backslash
+hlsym{{*}}
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{){-}}
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{random}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{random}
+\backslash
+hlstd{}
+\backslash
+hlsym{(){*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{2}
+\backslash
+hlstd{}
+\backslash
+hlsym{{*}}
+\backslash
+hlstd{xpmax}
+\backslash
+hlsym{){-}}
+\backslash
+hlstd{xpmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{random}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{random}
+\backslash
+hlstd{}
+\backslash
+hlsym{(){*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{2}
+\backslash
+hlstd{}
+\backslash
+hlsym{{*}}
+\backslash
+hlstd{ypmax}
+\backslash
+hlsym{){-}}
+\backslash
+hlstd{ypmax}
+\backslash
+hlsym{))}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore x
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{particle
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{+=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{count}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore y
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{particle
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{+=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{count}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{def
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{particle
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{particles}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{if
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{any}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particle}
+\backslash
+hlsym{.}
+\backslash
+hlstd{lost}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{count
+\backslash
+ }
+\backslash
+hlsym{+=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{return
+\backslash
+ }
+\backslash
+hlstd{count}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Set
+\backslash
+ some
+\backslash
+ properties}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{n
+\backslash
+textunderscore steps
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{20}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{10}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{ring
+\backslash
+textunderscore steps
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{40}
+\backslash
+hlstd{}
+\backslash
+hlsym{.}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{total
+\backslash
+textunderscore steps
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+textunderscore steps
+\backslash
+ }
+\backslash
+hlsym{{*}
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{50}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{r0
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{2}
+\backslash
+hlstd{}
+\backslash
+hlsym{.}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{xmax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0.03}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{ymax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlnum{0.03}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{xpmax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ ypmax
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ dz
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ (}
+\backslash
+hlstd{}
+\backslash
+hlnum{2
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{*}
+\backslash
+ }
+\backslash
+hlstd{r0
+\backslash
+ }
+\backslash
+hlsym{{*}
+\backslash
+ }
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{pi}
+\backslash
+hlsym{)
+\backslash
+ /
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+textunderscore steps}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ These
+\backslash
+ are
+\backslash
+ the
+\backslash
+ field
+\backslash
+ indices
+\backslash
+ to
+\backslash
+ use}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{ns
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}}
+\backslash
+hlstd{}
+\backslash
+hlkwb{float}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{x}
+\backslash
+hlsym{)/}
+\backslash
+hlstd{n
+\backslash
+textunderscore steps
+\backslash
+ }
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{x
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{n
+\backslash
+textunderscore steps}
+\backslash
+hlsym{){]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ This
+\backslash
+ stores
+\backslash
+ the
+\backslash
+ rings
+\backslash
+ to
+\backslash
+ be
+\backslash
+ simulated}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{rings
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Make
+\backslash
+ one
+\backslash
+ ring
+\backslash
+ per
+\backslash
+ field
+\backslash
+ index}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{n
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{ns}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Create
+\backslash
+ the
+\backslash
+ matrices
+\backslash
+ for
+\backslash
+ this
+\backslash
+ field
+\backslash
+ index}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+textunderscore matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{m}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{({[}}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{(((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),
+\backslash
+ (}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{/((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{)){*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{(((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}{-}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{.
+\backslash
+ {*}
+\backslash
+ (((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{)/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{){*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{(((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),
+\backslash
+ }
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{(((}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{{-}}
+\backslash
+hlstd{n}
+\backslash
+hlsym{){*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{((}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),
+\backslash
+ (}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{/(}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{)){*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{((}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)){]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,{-}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1}
+\backslash
+hlstd{}
+\backslash
+hlsym{.
+\backslash
+ {*}
+\backslash
+ ((}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{)/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{){*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{((}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)),
+\backslash
+ }
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{((}
+\backslash
+hlstd{n}
+\backslash
+hlsym{{*}{*}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.5}
+\backslash
+hlstd{}
+\backslash
+hlsym{){*}(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{)){]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{empty
+\backslash
+textunderscore matrix
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{Matrix}
+\backslash
+hlsym{.}
+\backslash
+hlstd{m}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore matrix}
+\backslash
+hlstd{}
+\backslash
+hlsym{({[}}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{),
+\backslash
+ }
+\backslash
+hlstd{r0}
+\backslash
+hlsym{{*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{),}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}({-}}
+\backslash
+hlstd{}
+\backslash
+hlnum{1.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{){*}}
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{sin}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{),
+\backslash
+ }
+\backslash
+hlstd{math}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{cos}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{/}
+\backslash
+hlstd{r0}
+\backslash
+hlsym{),}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{1.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{dz}
+\backslash
+hlsym{{]},}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{0.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{,}
+\backslash
+hlstd{}
+\backslash
+hlnum{1.0}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}}
+\backslash
+hlstd{$
+\backslash
+backslash$
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlsym{{]})}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Make
+\backslash
+ the
+\backslash
+ sections
+\backslash
+ for
+\backslash
+ this
+\backslash
+ ring}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{sections
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{x
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{range}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{int}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ring
+\backslash
+textunderscore steps}
+\backslash
+hlsym{)):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{sections}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{RingSection}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{RingSection}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ring
+\backslash
+textunderscore matrix}
+\backslash
+hlsym{))}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ }
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Make
+\backslash
+ the
+\backslash
+ ring}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{rings}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{Ring}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{Ring}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{sections}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{make
+\backslash
+textunderscore particles}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{xpmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ypmax}
+\backslash
+hlsym{),
+\backslash
+ }
+\backslash
+hlstd{xmax}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ymax}
+\backslash
+hlsym{))}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Run
+\backslash
+ the
+\backslash
+ simulation}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{x}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{rings}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{ring}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{step}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{total
+\backslash
+textunderscore steps}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwa{print
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{len}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{rings}
+\backslash
+hlsym{)
+\backslash
+ {-}
+\backslash
+ }
+\backslash
+hlstd{x}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Receive
+\backslash
+ the
+\backslash
+ results}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{out
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ {[}}
+\backslash
+hlstd{}
+\backslash
+hlstr{"n,
+\backslash
+ remaining,
+\backslash
+ xlost,
+\backslash
+ ylost"}
+\backslash
+hlstd{}
+\backslash
+hlsym{{]}}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{x}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{ring
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{enumerate}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{rings}
+\backslash
+hlsym{):}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{out}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{append}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ns}
+\backslash
+hlsym{{[}}
+\backslash
+hlstd{x}
+\backslash
+hlsym{{]})
+\backslash
+ +
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{',
+\backslash
+ '}
+\backslash
+hlstd{
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{{-}
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ring}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{))
+\backslash
+ +
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{',
+\backslash
+ '}
+\backslash
+hlstd{
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{{-}
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore x
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ring}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{))
+\backslash
+ +
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{',
+\backslash
+ '}
+\backslash
+hlstd{
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{str}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{particles
+\backslash
+ }
+\backslash
+hlsym{{-}
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwd{count
+\backslash
+textunderscore y
+\backslash
+textunderscore lost}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{ring}
+\backslash
+hlsym{.}
+\backslash
+hlstd{particles}
+\backslash
+hlsym{)))}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlslc{
+\backslash
+#
+\backslash
+ Write
+\backslash
+ the
+\backslash
+ results
+\backslash
+ to
+\backslash
+ a
+\backslash
+ file}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{outfile
+\backslash
+ }
+\backslash
+hlsym{=
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlkwb{open}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{}
+\backslash
+hlstr{"OUT.csv"}
+\backslash
+hlstd{}
+\backslash
+hlsym{,
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{"w"}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlkwa{for
+\backslash
+ }
+\backslash
+hlstd{line
+\backslash
+ }
+\backslash
+hlkwa{in
+\backslash
+ }
+\backslash
+hlstd{out}
+\backslash
+hlsym{:}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{}
+\backslash
+hlstd{
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ }
+\backslash
+hlstd{outfile}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{write}
+\backslash
+hlstd{}
+\backslash
+hlsym{(}
+\backslash
+hlstd{line
+\backslash
+ }
+\backslash
+hlsym{+
+\backslash
+ }
+\backslash
+hlstd{}
+\backslash
+hlstr{'}
+\backslash
+hlesc{$
+\backslash
+backslash$n}
+\backslash
+hlstr{'}
+\backslash
+hlstd{}
+\backslash
+hlsym{)}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+hlstd{outfile}
+\backslash
+hlsym{.}
+\backslash
+hlstd{}
+\backslash
+hlkwd{close}
+\backslash
+hlstd{}
+\backslash
+hlsym{()}
+\backslash
+hlstd{}
+\backslash
+hspace*{
+\backslash
+fill}
+\backslash
+
+\backslash
+ 
+\backslash
+mbox{} 
+\backslash
+normalfont
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+[1] Banford, A.
+ P., 
+\emph on
+The Transport of Charged Particle Beams
+\emph default
+, Spon, 1966
+\end_layout
+
+\begin_layout Standard
+[2] Hamkins, J.
+ D., 
+\emph on
+Infinite Time Turing Machines: Supertask Computation
+\emph default
+, arXiv:math/0212047v1, 2002
+\end_layout
+
+\begin_layout Standard
+[3] Durrett, R., 
+\emph on
+Probability: Theory and Examples
+\emph default
+, http://www.math.cornell.edu/~durrett/PTE/pte.html, 2009
+\end_layout
+
+\end_body
+\end_document

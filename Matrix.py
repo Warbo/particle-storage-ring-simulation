@@ -3,10 +3,7 @@
 class Matrix:
 	"""This custom class is a pure Python implementation of matrices."""
 
-	def __init__(self):
-		pass
-
-	def init(self, rows, columns):
+	def __init__(self, rows, columns):
 		self.row_number = rows
 
 		self.column_number = columns
@@ -38,23 +35,17 @@ class Matrix:
 		nested list given."""
 		rows = len(values)
 		columns = len(values[0])
-		matrix = Matrix()
-		matrix.init(rows, columns)
+		matrix = Matrix(rows, columns)
 		for r, row in enumerate(values):
 			for c, element in enumerate(row):
-				matrix.__setitem__(str(r)+','+str(c), element)
+				matrix[str(r)+','+str(c)] = element
 		return matrix
-
-	#make_matrix = staticmethod(make_matrix)
 
 	def get_column(self, index):
 		column = []
 		for row in self.matrix:
 			column.append(row[index])
 		return column
-
-	#def get_row(self, index):
-	#	return self.matrix[index]
 
 	def __mul__ (self, other):
 		"""Returns a Matrix of the result of multiplying this matrix
@@ -65,8 +56,7 @@ class Matrix:
 			raise ValueError("Matrix dimensions do not match.")
 
 		# Now make the resulting matrix
-		matrix = Matrix()
-		matrix.init(self.row_number, other.column_number)
+		matrix = Matrix(self.row_number, other.column_number)
 
 		# Now calculate each element of the new matrix
 		for r, row in enumerate(matrix.matrix):
@@ -75,7 +65,8 @@ class Matrix:
 				# The current element is the sum of the elements of
 				# this matrix's row and the other matrix's column
 				for i in range(self.row_number):
-					matrix.__setitem__(str(r)+','+str(c), matrix.__getitem__(str(r)+','+str(c)) + self.matrix[r][i] * other.get_column(c)[i])
+					matrix[str(r)+','+str(c)] += \
+						self.matrix[r][i] * other.get_column(c)[i]
 
 		return matrix
 
@@ -86,12 +77,4 @@ class Matrix:
 		return_string = return_string + ']'
 		return return_string
 
-m = Matrix()
-m.init(1,1)
-
-if __name__ == '__main__':
-	test1 = m.make_matrix([[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]])
-	test2 = m.make_matrix([[1.0], [2.0], [3.0], [4.0]])
-
-	print (test1.__mul__(test2)).__str__()
-	print (test1 * test2).__str__()
+m = Matrix(1, 1)
